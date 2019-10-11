@@ -36,7 +36,7 @@ namespace Xam.Initialization
 			int frameDelay = m_initFrameDelay;
 			while ( --frameDelay >= 0 ) { yield return null; }
 
-			Utility.FadeTransition.Instance.FadeIn( m_fadeInDuration );
+			TransitionController.Instance.Open( m_fadeInDuration );
 
 			m_initializer.StartInitializing();
 			while ( !m_initializer.IsInitializationComplete() ) { yield return null; }

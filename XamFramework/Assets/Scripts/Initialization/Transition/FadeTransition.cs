@@ -3,39 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Xam.Utility
+namespace Xam.Initialization
 {
-	public class FadeTransition : Patterns.SingletonMono<FadeTransition>
+	public class FadeTransition : MonoBehaviour, ITransition
 	{
-		private Image FadeElement
-		{
-			get
-			{
-				if ( m_fadeElement == null )
-				{
-					m_fadeElement = GetComponentInChildren<Image>();
-				}
-				return m_fadeElement;
-			}
-		}
-
 		[Header( "Fade Transition" )]
 		[SerializeField] private bool m_startBlackedOut = false;
 
 		private Image m_fadeElement = null;
 		private Coroutine m_fadeRoutine = null;
 
-		public void FadeOut( float timespan )
+		public void Open( float duration )
 		{
-			CrossFade( 1, timespan );
+			CrossFade( 0, duration );
 		}
 
-		public void FadeIn( float timespan )
+		public void Close( float duration )
 		{
-			CrossFade( 0, timespan );
+			CrossFade( 1, duration );
 		}
 
-		public void CrossFade( float targetAlpha, float timespan )
+		private void CrossFade( float targetAlpha, float timespan )
 		{
 			if ( m_fadeElement == null )
 			{
@@ -47,7 +35,7 @@ namespace Xam.Utility
 			m_fadeRoutine = StartCoroutine( CrossFade_Coroutine( targetAlpha, timespan ) );
 		}
 
-		public void StopFade()
+		private void StopFade()
 		{
 			if ( m_fadeRoutine != null )
 			{
@@ -56,19 +44,14 @@ namespace Xam.Utility
 			}
 		}
 
-		protected override void Awake()
+		private void Awake()
 		{
-			if ( m_fadeElement == null )
-			{
-				m_fadeElement = GetComponentInChildren<Image>();
-			}
+			m_fadeElement = GetComponentInChildren<Image>();
 
 			if ( m_startBlackedOut )
 			{
-				FadeElement.color = new Color( 0, 0, 0, 1 );
+				m_fadeElement.color = new Color( 0, 0, 0, 1 );
 			}
-
-			base.Awake();
 		}
 
 		private IEnumerator CrossFade_Coroutine( float targetAlpha, float timespan )

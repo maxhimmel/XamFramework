@@ -54,7 +54,7 @@ namespace Xam
 		private IEnumerator LoadLevel_Coroutine( string levelName )
 		{
 			// Begin fading out ...
-			Utility.FadeTransition.Instance.FadeOut( m_levelLoadFadeTransition );
+			Initialization.TransitionController.Instance.Close( m_levelLoadFadeTransition );
 			if ( m_levelLoadFadeTransition > 0 )
 			{
 				float timer = 0;
