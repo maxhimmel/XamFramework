@@ -8,10 +8,9 @@ namespace Xam.Editor
 	public static class XamEditorUtilities
 	{
 		/// <summary>
-		/// Loads first asset found with search parameter: "t: [typeof(T).name]"
+		/// Loads first asset found with search parameter: "t:[typeof(T).name]"
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
-		/// <param name="path"></param>
 		/// <returns></returns>
 		public static T LoadAsset<T>() where T : Object
 		{
@@ -21,6 +20,11 @@ namespace Xam.Editor
 			return LoadFirstAsset<T>( assetGuids );
 		}
 
+		/// <summary>
+		/// Loads first asset found with search parameter: "ref:Scripts/[typeof(T).name].cs"
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
 		public static T LoadAssetReferencing<T>() where T : Object
 		{
 			string[] assetGuids = AssetDatabase.FindAssets( $@"ref:Scripts/{typeof( T ).Name}.cs" );
