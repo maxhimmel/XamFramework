@@ -22,6 +22,25 @@ namespace Xam.Editor
 			return gameManager.GetComponent<GameManager>();
 		}
 
+		public static Initialization.LevelInitializer CreateLevelInitializer( string name )
+		{
+			GameObject levelInitializer = new GameObject( name, typeof( Initialization.LevelInitializer ) );
+			CreatePrefabAttachment<Initialization.DelayInitializer>( levelInitializer );
+
+			GameManager gameManagerPrefab = XamEditorUtilities.LoadAssetReferencing<GameManager>();
+			if ( gameManagerPrefab != null )
+			{
+				SerializedObject levelInitializerSerialObj = new SerializedObject( levelInitializer.GetComponent<Initialization.LevelInitializer>() );
+				{
+					SerializedProperty gameManagerPrefabProperty = levelInitializerSerialObj.FindProperty( "m_gameManagerPrefab" );
+					gameManagerPrefabProperty.objectReferenceValue = gameManagerPrefab;
+				}
+				levelInitializerSerialObj.ApplyModifiedPropertiesWithoutUndo();
+			}
+
+			return levelInitializer.GetComponent<Initialization.LevelInitializer>();
+		}
+
 		public static T CreatePrefabAttachment<T>( GameObject prefabParent, string explicitName = null ) where T : Component
 		{
 			string name = explicitName ?? typeof( T ).Name;
