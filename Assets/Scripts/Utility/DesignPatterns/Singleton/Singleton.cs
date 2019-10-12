@@ -21,7 +21,7 @@ namespace Xam.Utility.Patterns
 
 		private static T m_instance = default;
 
-		private Singleton()
+		protected Singleton()
 		{
 			// Intentionally blank ...
 		}

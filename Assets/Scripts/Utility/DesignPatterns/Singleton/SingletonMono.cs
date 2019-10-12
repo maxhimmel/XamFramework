@@ -56,6 +56,7 @@ namespace Xam.Utility.Patterns
 
 		protected virtual void OnApplicationQuit()
 		{
+			m_instance = null;
 			m_applicationQuitting = true;
 		}
 	}
