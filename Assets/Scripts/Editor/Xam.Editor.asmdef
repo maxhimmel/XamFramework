@@ -1,7 +1,8 @@
 {
     "name": "Xam.Editor",
     "references": [
-        "GUID:4946dc32f27bb944681342917c9d9a36"
+        "GUID:4946dc32f27bb944681342917c9d9a36",
+        "GUID:09aad781a57a57f4999593288ad65c02"
     ],
     "includePlatforms": [
         "Editor"
