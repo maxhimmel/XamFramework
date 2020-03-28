@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEditor;
 
 namespace Xam.Editor
@@ -17,7 +18,7 @@ namespace Xam.Editor
 			audioManager.transform.SetParent( gameManager.transform );
 
 			Initialization.TransitionController transitionController = CreatePrefabAttachment<Initialization.TransitionController>( gameManager );
-			CreatePrefabAttachment<Initialization.FadeTransition>( transitionController.gameObject );
+			CreateFadeTransition( transitionController.gameObject );
 
 			return gameManager.GetComponent<GameManager>();
 		}
@@ -74,6 +75,21 @@ namespace Xam.Editor
 			audioManagerSerialObj.ApplyModifiedPropertiesWithoutUndo();
 
 			return audioManager.GetComponent<Audio.AudioManager>();
+		}
+
+		private static Initialization.FadeTransition CreateFadeTransition( GameObject prefabParent )
+		{
+			Initialization.FadeTransition fadeTransition = CreatePrefabAttachment<Initialization.FadeTransition>( prefabParent );
+
+			Canvas transitionCanvas = fadeTransition.gameObject.AddComponent<Canvas>();
+			transitionCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+
+			Image fadeElement = CreatePrefabAttachment<Image>( fadeTransition.gameObject, "FadeElement" );
+			fadeElement.rectTransform.localPosition = Vector3.zero;
+			fadeElement.rectTransform.anchorMin = Vector2.zero;
+			fadeElement.rectTransform.anchorMax = Vector2.one;
+
+			return fadeTransition;
 		}
 	}
 }
