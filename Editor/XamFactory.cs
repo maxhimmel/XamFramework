@@ -53,19 +53,19 @@ namespace Xam.Editor
 
 		private static Audio.AudioManager CreateAudioManager( string name )
 		{
-			GameObject audioManager = new GameObject( name, typeof( Audio.AudioManager ) );
-			AudioSource sfxSource = CreatePrefabAttachment<AudioSource>( audioManager, "SFXSource" );
+			Audio.AudioManager audioManager = new GameObject( name ).AddComponent<Audio.AudioManager>();
+			AudioSource sfxSource = CreatePrefabAttachment<AudioSource>( audioManager.gameObject, "SFXSource" );
 			{
 				sfxSource.loop = false;
 				sfxSource.playOnAwake = false;
 			}
-			AudioSource musicSource = CreatePrefabAttachment<AudioSource>( audioManager, "MusicSource" );
+			AudioSource musicSource = CreatePrefabAttachment<AudioSource>( audioManager.gameObject, "MusicSource" );
 			{
 				musicSource.loop = true;
 				musicSource.playOnAwake = true;
 			}
 
-			SerializedObject audioManagerSerialObj = new SerializedObject( audioManager.GetComponent<Audio.AudioManager>() );
+			SerializedObject audioManagerSerialObj = new SerializedObject( audioManager );
 			{
 				SerializedProperty sfxSourceProperty = audioManagerSerialObj.FindProperty( "m_sfxSource" );
 				sfxSourceProperty.objectReferenceValue = sfxSource;
@@ -74,7 +74,7 @@ namespace Xam.Editor
 			}
 			audioManagerSerialObj.ApplyModifiedPropertiesWithoutUndo();
 
-			return audioManager.GetComponent<Audio.AudioManager>();
+			return audioManager;
 		}
 
 		private static Initialization.FadeTransition CreateFadeTransition( GameObject prefabParent )
