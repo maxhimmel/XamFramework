@@ -11,6 +11,26 @@ namespace Xam.Cinemachine
 		private const int k_vertsPerTri = 3;
 		private const int k_trisPerQuad = 2;
 
+		public static int GetClosestPoint( this CinemachinePathBase path, Vector3 samplePosition )
+		{
+			float closestDistSqr = Mathf.Infinity;
+			int closestPos = -1;
+
+			for ( int pos = (int)path.MinPos; pos < path.MaxPos; ++pos )
+			{
+				Vector3 worldPos = path.EvaluatePosition( pos );
+				float distSqr = (worldPos - samplePosition).sqrMagnitude;
+
+				if ( distSqr < closestDistSqr )
+				{
+					closestDistSqr = distSqr;
+					closestPos = pos;
+				}
+			}
+
+			return closestPos;
+		}
+
 		public static void PopulateLineRenderPoints( this CinemachinePathBase path, LineRenderer renderer )
 		{
 			float maxStepLength = 1f / path.m_Resolution;
