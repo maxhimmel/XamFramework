@@ -12,7 +12,8 @@ namespace Xam.Gameplay.Patterns
 
 		[Header( "Modifiers" )]
 		[SerializeField] protected bool m_spawnOnAwake = true;
-		
+		[SerializeField] protected bool m_parentToFactory = true;
+
 		public virtual T Create( Vector3 position = default, Quaternion rotation = default, Transform parent = null )
 		{
 			T newObj = Instantiate( m_prefab, position, rotation, parent );
@@ -23,7 +24,8 @@ namespace Xam.Gameplay.Patterns
 		{
 			if ( m_spawnOnAwake )
 			{
-				Create( transform.position, transform.rotation, transform );
+				Transform parent = m_parentToFactory ? transform : null;
+				Create( transform.position, transform.rotation, parent );
 			}
 		}
 	}
