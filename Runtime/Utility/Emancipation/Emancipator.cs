@@ -43,12 +43,20 @@ namespace Xam.Utility
 
 		private IEnumerator WaitForExpiration_Coroutine()
 		{
-			while ( IsAlive() ) { yield return null; }
+			while ( IsAlive() )
+			{
+				UpdateExpirationTick();
+				yield return null;
+			}
 
 			Destroy( gameObject );
 			m_lifetimeRoutine = null;
 		}
 
 		protected abstract bool IsAlive();
+
+		protected virtual void UpdateExpirationTick()
+		{
+		}
 	}
 }
