@@ -7,6 +7,22 @@ namespace Xam.Editor
 {
 	public static class XamEditorUtilities
 	{
+		public static Texture2D CreateTex( int width, int height, Color color )
+		{
+			Texture2D newTex = new Texture2D( width, height );
+
+			Color[] pixels = new Color[4];
+			for ( int idx = 0; idx < width * height; ++idx )
+			{
+				pixels[idx] = color;
+			}
+
+			newTex.SetPixels( pixels );
+			newTex.Apply();
+
+			return newTex;
+		}
+
 		/// <summary>
 		/// Loads first asset found with search parameter: "t:[typeof(T).name]"
 		/// </summary>
