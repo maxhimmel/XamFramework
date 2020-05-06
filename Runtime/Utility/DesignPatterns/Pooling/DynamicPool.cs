@@ -9,6 +9,15 @@ namespace Xam.Utility.Patterns
 	{
 		private Dictionary<System.Type, List<Component>> m_pooledObjectsByType = new Dictionary<System.Type, List<Component>>();
 
+		public T GetFirstPooledObjectByType<T>() where T : Component
+		{
+			IEnumerable<T> pooledObjects = GetPooledObjectsByType<T>( out int count );
+
+			return count > 0
+				? pooledObjects.First()
+				: null;
+		}
+
 		public IEnumerable<T> GetPooledObjectsByType<T>() where T : Component
 		{
 			if ( m_pooledObjectsByType.TryGetValue( typeof( T ), out List<Component> result ) && result != null )
