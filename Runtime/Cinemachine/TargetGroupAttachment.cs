@@ -14,5 +14,13 @@ namespace Xam.Cinemachine
 		{
 			TargetGroupHelper.Instance.AddToTargetGroup( transform, m_weight, m_radius );
 		}
+
+		private void OnDestroy()
+		{
+			if ( TargetGroupHelper.Exists )
+			{
+				TargetGroupHelper.Instance.RemoveFromTargetGroup( transform );
+			}
+		}
 	}
 }

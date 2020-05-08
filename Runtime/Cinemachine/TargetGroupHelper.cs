@@ -16,6 +16,11 @@ namespace Xam.Cinemachine
 			m_targetGroup.AddMember( target, weight, radius );
 		}
 
+		public void RemoveFromTargetGroup( Transform target )
+		{
+			m_targetGroup.RemoveMember( target );
+		}
+
 		protected override void Awake()
 		{
 			base.Awake();
