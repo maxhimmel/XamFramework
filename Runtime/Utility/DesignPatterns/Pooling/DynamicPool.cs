@@ -7,7 +7,7 @@ namespace Xam.Utility.Patterns
 {
 	public class DynamicPool : SingletonMono<DynamicPool>
 	{
-		private Dictionary<System.Type, List<Component>> m_pooledObjectsByType = new Dictionary<System.Type, List<Component>>();
+		private Dictionary<System.Type, LinkedList<Component>> m_pooledObjectsByType = new Dictionary<System.Type, LinkedList<Component>>();
 
 		public T GetFirstPooledObjectByType<T>() where T : Component
 		{
@@ -18,18 +18,9 @@ namespace Xam.Utility.Patterns
 				: null;
 		}
 
-		public IEnumerable<T> GetPooledObjectsByType<T>() where T : Component
-		{
-			if ( m_pooledObjectsByType.TryGetValue( typeof( T ), out List<Component> result ) && result != null )
-			{
-				return result.Cast<T>();
-			}
-			return null;
-		}
-
 		public IEnumerable<T> GetPooledObjectsByType<T>( out int count ) where T : Component
 		{
-			if ( m_pooledObjectsByType.TryGetValue( typeof( T ), out List<Component> result ) && result != null )
+			if ( m_pooledObjectsByType.TryGetValue( typeof( T ), out LinkedList<Component> result ) && result != null )
 			{
 				count = result.Count;
 				return result.Cast<T>();
@@ -39,29 +30,38 @@ namespace Xam.Utility.Patterns
 			return null;
 		}
 
-		public void AddPooledObjectByType<T>( Component newObj ) where T : Component
+		public IEnumerable<T> GetPooledObjectsByType<T>() where T : Component
 		{
-			if ( newObj == null ) { return; }
-
-			System.Type type = typeof( T );
-			if ( m_pooledObjectsByType.TryGetValue( type, out List<Component> result ) )
+			if ( m_pooledObjectsByType.TryGetValue( typeof( T ), out LinkedList<Component> result ) && result != null )
 			{
-				result.Add( newObj );
-				return;
+				return result.Cast<T>();
 			}
-
-			result = new List<Component>() { newObj };
-			m_pooledObjectsByType[type] = result;
+			return null;
 		}
 
-		public void RemovePooledObjectByType<T>( Component staleObj ) where T : Component
+		public LinkedListNode<Component> AddPooledObjectByType<T>( Component newObj ) where T : Component
 		{
-			if ( staleObj == null ) { return; }
+			if ( newObj == null ) { return null; }
 
 			System.Type type = typeof( T );
-			if ( m_pooledObjectsByType.TryGetValue( type, out List<Component> result ) )
+			if ( m_pooledObjectsByType.TryGetValue( type, out LinkedList<Component> result ) )
 			{
-				result.Remove( staleObj );
+				return result.AddLast( newObj );
+			}
+
+			result = new LinkedList<Component>();
+			m_pooledObjectsByType[type] = result;
+
+			return result.AddLast( newObj );
+		}
+
+		public void RemovePooledObjectByType<T>( LinkedListNode<Component> staleNode ) where T : Component
+		{
+			if ( staleNode == null ) { return; }
+			
+			if ( m_pooledObjectsByType.TryGetValue( typeof ( T ), out LinkedList<Component> result ) )
+			{
+				result.Remove( staleNode );
 				return;
 			}
 		}

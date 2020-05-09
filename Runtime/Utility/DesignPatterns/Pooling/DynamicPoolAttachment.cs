@@ -8,16 +8,17 @@ namespace Xam.Utility.Patterns
 		where T : Component
 	{
 		protected T m_objectInPool = null;
+		protected LinkedListNode<Component> m_poolNode = null;
 
 		private void Awake()
 		{
 			m_objectInPool = GetComponent<T>();
-			DynamicPool.Instance.AddPooledObjectByType<T>( m_objectInPool );
+			m_poolNode = DynamicPool.Instance.AddPooledObjectByType<T>( m_objectInPool );
 		}
 
 		private void OnDestroy()
 		{
-			DynamicPool.Instance?.RemovePooledObjectByType<T>( m_objectInPool );
+			DynamicPool.Instance?.RemovePooledObjectByType<T>( m_poolNode );
 		}
 	}
 }
