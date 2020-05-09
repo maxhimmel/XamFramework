@@ -62,6 +62,8 @@ namespace Xam.Gameplay
 
 		private bool CanBeGathered( Collider2D collider )
 		{
+			if ( !m_contactFilter.useTriggers && collider.isTrigger ) { return false; }
+
 			int otherLayer = 1 << collider.gameObject.layer;
 			return (otherLayer & m_gatherMask) != 0;
 		}
