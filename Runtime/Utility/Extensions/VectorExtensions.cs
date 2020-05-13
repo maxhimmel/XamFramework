@@ -33,5 +33,20 @@ namespace Xam.Utility.Extensions
 				z = numerator.z / denominator.z
 			};
 		}
+
+		public static Vector2 VectorXY( this Vector3 self )
+		{
+			return new Vector2( self.x, self.y );
+		}
+
+		public static Vector2 VectorXZ( this Vector3 self )
+		{
+			return new Vector2( self.x, self.z );
+		}
+
+		public static Vector2 VectorYZ( this Vector3 self )
+		{
+			return new Vector2( self.y, self.z );
+		}
 	}
 }
