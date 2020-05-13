@@ -29,6 +29,7 @@ namespace Xam.Utility.Extensions
 				} );
 			}
 
+			player.controllers.maps.mapEnabler.ruleSets.Clear();
 			player.controllers.maps.mapEnabler.ruleSets.Add( enabledControlsRuleSet );
 			player.controllers.maps.mapEnabler.Apply();
 		}
