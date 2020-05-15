@@ -35,11 +35,13 @@ namespace Xam.Utility.Randomization
 
 		public K GetRandomItem()
 		{
-			if ( m_maxWeight <= 0 ) { return default; }
+			if ( m_maxWeight <= 0 )
+			{
+				Debug.LogWarning( $"WeightedList<{typeof(T).Name}> | Attempting to get random item without being initialized." );
+				return default;
+			}
 
 			int roll = Random.Range( 0, m_maxWeight + 1 );
-			Debug.Log( roll );
-
 			if ( roll <= 0 ) { return default; }
 
 			foreach ( T node in m_items )
