@@ -12,66 +12,71 @@ namespace Xam.Editor
 	public class WeightedListDrawer : PropertyDrawer
 	{
 		public const string k_itemsPropertyName = "m_items";
-
-		private ReorderableList m_reorderableNodes = null;
-		private SerializedProperty m_itemsProperty = null;
+		
+		private Dictionary<string, ReorderablePropertyData> m_propertyPathToReorderableProperties = null;
 
 		public WeightedListDrawer()
 		{
-			m_itemsProperty = null;
-			m_reorderableNodes = null;
+			m_propertyPathToReorderableProperties = new Dictionary<string, ReorderablePropertyData>();
 		}
 
 		public override void OnGUI( Rect position, SerializedProperty property, GUIContent label )
 		{
-			OnGUI_ItemsList( position, property );
+			ReorderablePropertyData reorderableProperty = GetReorderablePropertyData( property );
+
+			OnGUI_ItemsList( position, property.displayName, reorderableProperty );
 
 			if ( property.serializedObject.hasModifiedProperties )
 			{
-				NormalizeWeights( m_itemsProperty );
+				NormalizeWeights( reorderableProperty.Property );
 
 				property.serializedObject.ApplyModifiedProperties();
 			}
 		}
 
-		private void OnGUI_ItemsList( Rect position, SerializedProperty property )
+		private void OnGUI_ItemsList( Rect position, string headerName, ReorderablePropertyData reorderableProperty )
 		{
-			if ( m_reorderableNodes == null )
-			{
-				InitializeReorderableList( property );
-			}
+			ReorderableList reorderable = reorderableProperty.Reorderable;
+			SerializedProperty listProperty = reorderableProperty.Property;
 
-			m_reorderableNodes.drawHeaderCallback = ( Rect headerPos ) =>
+			reorderable.drawHeaderCallback = ( Rect headerPos ) =>
 			{
-				EditorGUI.LabelField( headerPos, property.displayName );
+				EditorGUI.LabelField( headerPos, headerName );
 			};
 
-			m_reorderableNodes.drawElementCallback = ( Rect elementPos, int index, bool isActive, bool isFocused ) =>
+			reorderable.drawElementCallback = ( Rect elementPos, int index, bool isActive, bool isFocused ) =>
 			{
-				SerializedProperty elementProperty = m_itemsProperty.GetArrayElementAtIndex( index );
+				SerializedProperty elementProperty = listProperty.GetArrayElementAtIndex( index );
 				elementPos.height = EditorGUI.GetPropertyHeight( elementProperty );
 				elementPos.y += EditorGUIUtility.standardVerticalSpacing;
 
 				EditorGUI.PropertyField( elementPos, elementProperty );
 			};
 
-			m_reorderableNodes.elementHeightCallback = ( int index ) =>
+			reorderable.elementHeightCallback = ( int index ) =>
 			{
-				SerializedProperty elementProperty = m_itemsProperty.GetArrayElementAtIndex( index );
+				SerializedProperty elementProperty = listProperty.GetArrayElementAtIndex( index );
 				float height = EditorGUI.GetPropertyHeight( elementProperty );
 
 				return height + EditorGUIUtility.singleLineHeight / 2f;
 			};
 
-			m_reorderableNodes.DoList( position );
+			reorderable.DoList( position );
 		}
 
-		private void InitializeReorderableList( SerializedProperty property )
+		private ReorderablePropertyData GetReorderablePropertyData( SerializedProperty property )
 		{
-			m_itemsProperty = property.FindPropertyRelative( k_itemsPropertyName );
-			m_reorderableNodes = new ReorderableList( property.serializedObject, m_itemsProperty, true, true, true, true );
-		}
+			if ( m_propertyPathToReorderableProperties.TryGetValue( property.propertyPath, out ReorderablePropertyData data ) )
+			{
+				return data;
+			}
 
+			data = new ReorderablePropertyData( property, k_itemsPropertyName );
+			m_propertyPathToReorderableProperties.Add( property.propertyPath, data );
+
+			return data;
+		}
+		
 		protected void NormalizeWeights( SerializedProperty itemsProperty )
 		{
 			int weightSum = 0;
@@ -99,21 +104,22 @@ namespace Xam.Editor
 
 		public override float GetPropertyHeight( SerializedProperty property, GUIContent label )
 		{
-			if ( m_reorderableNodes == null )
-			{
-				SerializedProperty itemsProperty = property.FindPropertyRelative( k_itemsPropertyName );
-				if ( itemsProperty.arraySize <= 0 || !itemsProperty.isExpanded ) { return EditorGUIUtility.singleLineHeight; }
-
-				SerializedProperty firstArrayProperty = itemsProperty.GetArrayElementAtIndex( 0 );
-				float arrayItemHeight = EditorGUI.GetPropertyHeight( firstArrayProperty );
-
-				return (itemsProperty.arraySize) * arrayItemHeight + 3 * (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing);
-			}
-
-			return m_reorderableNodes.GetHeight();
+			ReorderablePropertyData reorderableProperty = GetReorderablePropertyData( property );
+			return reorderableProperty.Reorderable.GetHeight();
 		}
 	}
 
+	public class ReorderablePropertyData
+	{
+		public ReorderableList Reorderable;
+		public SerializedProperty Property;
+
+		public ReorderablePropertyData( SerializedProperty property, string listPropertyName )
+		{
+			Property = property.FindPropertyRelative( listPropertyName );
+			Reorderable = new ReorderableList( property.serializedObject, Property, true, true, true, true );
+		}
+	}
 
 	[CustomPropertyDrawer( typeof( WeightedNode ), true )]
 	public class WeightedNodeDrawer : PropertyDrawer
