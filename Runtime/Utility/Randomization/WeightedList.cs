@@ -37,7 +37,7 @@ namespace Xam.Utility.Randomization
 		{
 			if ( m_maxWeight <= 0 )
 			{
-				Debug.LogWarning( $"WeightedList<{typeof(T).Name}> | Attempting to get random item without being initialized." );
+				Debug.LogWarning( $"{typeof(T).Name} | Attempting to get random item without being initialized." );
 				return default;
 			}
 
