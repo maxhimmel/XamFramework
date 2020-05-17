@@ -7,6 +7,7 @@ namespace Xam.Utility.Juicy
 	public class CameraColorShifter : MonoBehaviour
 	{
 		[SerializeField] private bool m_playOnStart = true;
+		[SerializeField] private bool m_useRandomColorAtStart = false;
 		[SerializeField] private float m_shiftDuration = 2;
 
 		[Header( "Colors" )]
@@ -28,7 +29,10 @@ namespace Xam.Utility.Juicy
 		{
 			if ( m_playOnStart )
 			{
-				StartShiftingColors( GetCurrentColor(), GetRandomColor(), m_shiftDuration );
+				Color startColor = m_useRandomColorAtStart
+					? GetRandomColor()
+					: GetCurrentColor();
+				StartShiftingColors( startColor, GetRandomColor(), m_shiftDuration );
 			}
 		}
 
