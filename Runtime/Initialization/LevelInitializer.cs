@@ -6,7 +6,7 @@ namespace Xam.Initialization
 {
 	public class LevelInitializer : Utility.Patterns.SingletonMono<LevelInitializer>
 	{
-		public static bool IsInitialized { get { return Instance != null ? Instance.m_initializer.IsInitializationComplete() : true; } }
+		public static bool IsInitialized { get { return Instance != null ? Instance.m_isInitialized : true; } }
 
 		[Header( "References" )]
 		[SerializeField] private GameManager m_gameManagerPrefab = default;
@@ -16,6 +16,7 @@ namespace Xam.Initialization
 		[SerializeField] private float m_fadeInDuration = 1.5f;
 
 		private IInitialize m_initializer = null;
+		private bool m_isInitialized = false;
 
 		protected override void Awake()
 		{
@@ -38,8 +39,12 @@ namespace Xam.Initialization
 
 			TransitionController.Instance.Open( m_fadeInDuration );
 
-			m_initializer.StartInitializing();
-			while ( !m_initializer.IsInitializationComplete() ) { yield return null; }
+			m_isInitialized = false;
+			{
+				m_initializer.StartInitializing();
+				while ( !m_initializer.IsInitializationComplete() ) { yield return null; }
+			}
+			m_isInitialized = true;
 		}
 	}
 }
