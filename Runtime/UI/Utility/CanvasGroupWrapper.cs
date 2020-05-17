@@ -8,6 +8,10 @@ namespace Xam.Ui
 	[RequireComponent( typeof( CanvasGroup ) )]
 	public class CanvasGroupWrapper : MonoBehaviour
 	{
+		private float DeltaTime { get { return m_useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime; } }
+
+		[SerializeField] private bool m_useUnscaledTime = true;
+
 		private CanvasGroup m_canvasGroup = null;
 		private Coroutine m_fadeRoutine = null;
 
@@ -55,7 +59,7 @@ namespace Xam.Ui
 
 			while ( timer < 1 )
 			{
-				timer += Time.deltaTime / timespan;
+				timer += DeltaTime / timespan;
 				float newAlpha = Mathf.Lerp( start, targetAlpha, timer );
 
 				m_canvasGroup.alpha = newAlpha;
