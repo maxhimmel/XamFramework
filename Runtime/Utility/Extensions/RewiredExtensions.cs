@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Rewired;
+using System.Linq;
 
 namespace Xam.Utility.Extensions
 {
@@ -39,12 +40,14 @@ namespace Xam.Utility.Extensions
 			ControllerMapEnabler.RuleSet enabledControlsRuleSet = player.controllers.maps.mapEnabler.ruleSets.Find( 
 				queryRuleSet => queryRuleSet.tag == k_enabledControlsRuleSetTag 
 			);
-
-			ControllerMapEnabler.Rule rule = enabledControlsRuleSet.Find( 
-				queryRule => queryRule.categoryId == categoryId 
-			);
-
-			rule.enable = isActive;
+			
+			foreach ( ControllerMapEnabler.Rule rule in enabledControlsRuleSet.rules )
+			{
+				if ( rule.categoryId == categoryId )
+				{
+					rule.enable = isActive;
+				}
+			}
 
 			player.controllers.maps.mapEnabler.Apply();
 		}
