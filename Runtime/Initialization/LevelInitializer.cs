@@ -28,7 +28,9 @@ namespace Xam.Initialization
 			{
 				Instantiate( m_gameManagerPrefab );
 			}
-			
+
+			Gameplay.TimeManager.Instance.SetTimeScale( 1, 0 );
+
 			StartCoroutine( Initialize_Coroutine() );
 		}
 
