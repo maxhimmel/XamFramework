@@ -7,9 +7,11 @@ namespace Xam.Gameplay
 	public class TimeManager : Utility.Patterns.SingletonMono<TimeManager>
 	{
 		[SerializeField] private AnimationCurve m_scalingCurve = AnimationCurve.Linear( 0, 0, 1, 1 );
-
+		
 		private float m_fixedTimeStep = -1;
 		private Coroutine m_timeScaleRoutine = null;
+		private float m_levelTimerStartedTime = 0;
+		private float m_levelTimerStoppedTime = 0;
 
 		public void SetTimeScale( float scale, float transitionTime )
 		{
@@ -58,6 +60,38 @@ namespace Xam.Gameplay
 		{
 			Time.timeScale = newScale;
 			Time.fixedDeltaTime = m_fixedTimeStep * newScale;
+		}
+
+		public void RestartLevelTimer()
+		{
+			m_levelTimerStartedTime = Time.timeSinceLevelLoad;
+			m_levelTimerStoppedTime = 0;
+		}
+
+		public void StopLevelTimer()
+		{
+			m_levelTimerStoppedTime = Time.timeSinceLevelLoad;
+		}
+
+		public void ClearLevelTimer()
+		{
+			m_levelTimerStartedTime = m_levelTimerStoppedTime = 0;
+		}
+
+		public System.TimeSpan GetLevelTime()
+		{
+			float levelTime = Time.timeSinceLevelLoad - m_levelTimerStartedTime;
+
+			if ( m_levelTimerStartedTime <= 0 )
+			{
+				levelTime = 0;
+			}
+			else if ( m_levelTimerStoppedTime > 0 )
+			{
+				levelTime = m_levelTimerStoppedTime - m_levelTimerStartedTime;
+			}
+
+			return System.TimeSpan.FromSeconds( levelTime );
 		}
 
 		protected override void Awake()
