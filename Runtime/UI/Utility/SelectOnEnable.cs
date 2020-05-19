@@ -13,15 +13,26 @@ namespace Xam.Ui
 
 		private void OnEnable()
 		{
-			if ( m_selectable == null )
-			{
-				m_selectable = GetComponent<Selectable>();
-			}
+			SetSelectable();
+		}
 
+		private void Start()
+		{
+			SetSelectable();
+		}
+
+		private void SetSelectable()
+		{
 			if ( EventSystem.current != null )
 			{
+				EventSystem.current.SetSelectedGameObject( null );
 				EventSystem.current.SetSelectedGameObject( m_selectable.gameObject );
 			}
+		}
+
+		private void Awake()
+		{
+			m_selectable = GetComponent<Selectable>();
 		}
 	}
 }
