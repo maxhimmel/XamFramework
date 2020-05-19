@@ -19,8 +19,8 @@ namespace Xam.Audio
 		[Range( 0, 1 )] public float Volume = 1;
 
 		[Space]
-		public float MinPitch = 1f;
-		public float MaxPitch = 1f;
+		public float MinPitch = 0.95f;
+		public float MaxPitch = 1.05f;
 
 		[Space]
 		public SoundAttachmentDatum Attachment3d = default;
