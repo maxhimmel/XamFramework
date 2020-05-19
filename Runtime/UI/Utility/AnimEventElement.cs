@@ -12,8 +12,8 @@ namespace Xam.Ui
 		protected float DeltaTime { get { return m_useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime; } }
 
 		[Header( "Animation Event Triggers" )]
-		[SerializeField] private EventTriggerType m_enabledEvent = EventTriggerType.PointerEnter;
-		[SerializeField] private EventTriggerType m_disabledEvent = EventTriggerType.PointerExit;
+		[SerializeField] private EventTriggerType[] m_enabledEvents = new EventTriggerType[1] { EventTriggerType.PointerEnter };
+		[SerializeField] private EventTriggerType[] m_disabledEvents = new EventTriggerType[1] { EventTriggerType.PointerExit };
 
 		[Space]
 		[SerializeField] private bool m_useUnscaledTime = true;
@@ -23,18 +23,24 @@ namespace Xam.Ui
 		protected virtual void Awake()
 		{
 			m_eventTrigger = GetComponent<EventTrigger>();
-			
-			if ( !TryGetEvent( m_eventTrigger, m_enabledEvent, out EventTrigger.Entry enabledEntry ) )
-			{
-				m_eventTrigger.triggers.Add( enabledEntry );
-			}
-			enabledEntry.callback.AddListener( OnElementEnabled );
 
-			if ( !TryGetEvent( m_eventTrigger, m_disabledEvent, out EventTrigger.Entry disabledEntry ) )
+			foreach ( EventTriggerType enabledEventType in m_enabledEvents )
 			{
-				m_eventTrigger.triggers.Add( disabledEntry );
+				if ( !TryGetEvent( m_eventTrigger, enabledEventType, out EventTrigger.Entry enabledEntry ) )
+				{
+					m_eventTrigger.triggers.Add( enabledEntry );
+				}
+				enabledEntry.callback.AddListener( OnElementEnabled );
 			}
-			disabledEntry.callback.AddListener( OnElementDisabled );
+
+			foreach ( EventTriggerType disabledEventType in m_disabledEvents )
+			{
+				if ( !TryGetEvent( m_eventTrigger, disabledEventType, out EventTrigger.Entry disabledEntry ) )
+				{
+					m_eventTrigger.triggers.Add( disabledEntry );
+				}
+				disabledEntry.callback.AddListener( OnElementDisabled );
+			}
 		}
 
 		private bool TryGetEvent( EventTrigger eventTrigger, EventTriggerType eventType, out EventTrigger.Entry entry )
