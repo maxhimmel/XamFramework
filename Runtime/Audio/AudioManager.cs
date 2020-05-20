@@ -80,6 +80,8 @@ namespace Xam.Audio
 					source.transform.position = data.Attachment3d.Attachment.position;
 				}
 			}
+
+			source.outputAudioMixerGroup = m_sfxMixerGroup;
 		}
 
 		private IEnumerator Track3dAttachment_Coroutine( AudioSource source, Transform attachment )
