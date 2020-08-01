@@ -19,5 +19,19 @@ namespace Xam.Utility.Extensions
 			Vector3 orthoWorldSize = new Vector3( orthoWidth, orthoHeight );
 			return new Bounds( camera.transform.position, orthoWorldSize );
 		}
+
+		/// <summary>
+		/// Returned bounds is centered [<paramref name="distance"/>] units along <paramref name="camera"/>'s forward direction.
+		/// </summary>
+		/// <param name="camera"></param>
+		/// <returns></returns>
+		public static Bounds GetFrustumWorldBounds( this Camera camera, float distance )
+		{
+			float frustumHeight = 2 * distance * Mathf.Tan( camera.fieldOfView * 0.5f * Mathf.Deg2Rad );
+			float frustuumWidth = frustumHeight * camera.aspect;
+
+			Vector3 center = camera.transform.position + camera.transform.forward * distance;
+			return new Bounds( center, new Vector3( frustuumWidth, frustumHeight, 0 ) );
+		}
 	}
 }
