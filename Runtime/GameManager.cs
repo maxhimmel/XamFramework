@@ -14,7 +14,7 @@ namespace Xam
 
 		public void LoadMainMenu()
 		{
-			m_loadingLevelRoutine = StartCoroutine( LoadLevel_Coroutine( m_mainMenuSceneName ) );
+			LoadLevel( m_mainMenuSceneName );
 		}
 
 		public void ReloadActiveLevel()
@@ -31,7 +31,7 @@ namespace Xam
 				return;
 			}
 
-			m_loadingLevelRoutine = StartCoroutine( LoadLevel_Coroutine( activeScenePath ) );
+			LoadLevel( activeScenePath );
 		}
 
 		/// <summary>
@@ -48,7 +48,12 @@ namespace Xam
 				nextScenePath = m_mainMenuSceneName;
 			}
 
-			m_loadingLevelRoutine = StartCoroutine( LoadLevel_Coroutine( nextScenePath ) );
+			LoadLevel( nextScenePath );
+		}
+
+		public void LoadLevel( string levelName )
+		{
+			m_loadingLevelRoutine = StartCoroutine( LoadLevel_Coroutine( levelName ) );
 		}
 
 		private IEnumerator LoadLevel_Coroutine( string levelName )
