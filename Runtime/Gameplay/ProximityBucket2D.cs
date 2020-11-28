@@ -44,8 +44,13 @@ namespace Xam.Gameplay
 				if ( IsInsideBucket( target ) ) { return; }
 
 				AddTarget( target );
-				OnTargetEnterEvent?.Invoke( target );
+				OnTargetEntered( target );
 			}
+		}
+
+		protected virtual void OnTargetEntered( T target )
+		{
+			OnTargetEnterEvent?.Invoke( target );
 		}
 
 		private void OnTriggerExit2D( Collider2D other )
@@ -56,8 +61,13 @@ namespace Xam.Gameplay
 				if ( !IsInsideBucket( target ) ) { return; }
 				
 				RemoveTarget( target );
-				OnTargetExitEvent?.Invoke( target );
+				OnTargetExited( target );
 			}
+		}
+
+		protected virtual void OnTargetExited( T target )
+		{
+			OnTargetExitEvent?.Invoke( target );
 		}
 
 		private bool CanBeGathered( Collider2D collider )
