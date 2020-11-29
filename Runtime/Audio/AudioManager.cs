@@ -17,6 +17,28 @@ namespace Xam.Audio
 		private AudioMixerGroup m_musicMixerGroup = null;
 		private LinkedList<AudioSource> m_sources = new LinkedList<AudioSource>();
 
+		public void SetSfxVolume( float volume )
+		{
+			float value = ConvertNormalizedVolumeToDecibel( volume );
+			m_sfxMixerGroup.audioMixer.SetFloat( "SfxVolume", value );
+		}
+
+		public void SetMusicVolume( float volume )
+		{
+			float value = ConvertNormalizedVolumeToDecibel( volume );
+			m_musicMixerGroup.audioMixer.SetFloat( "MusicVolume", value );
+		}
+
+		/// <summary>
+		/// https://forum.unity.com/threads/changing-audio-mixer-group-volume-with-ui-slider.297884/
+		/// </summary>
+		/// <param name="normalizedVolume"></param>
+		/// <returns></returns>
+		private float ConvertNormalizedVolumeToDecibel( float normalizedVolume )
+		{
+			return Mathf.Log10( Mathf.Clamp( normalizedVolume, 0.0001f, 1 ) ) * 20;
+		}
+
 		public void PlaySound( SoundDatum data )
 		{
 			if ( data == null || !data.IsValid() ) { return; }
