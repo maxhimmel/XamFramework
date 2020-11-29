@@ -93,7 +93,7 @@ namespace Xam.Gameplay
 			m_targets.Remove( target );
 		}
 
-		private void Awake()
+		protected virtual void Awake()
 		{
 			m_collider = GetComponentInChildren<Collider2D>();
 		}
