@@ -70,7 +70,7 @@ namespace Xam.Gameplay
 			OnTargetExitEvent?.Invoke( target );
 		}
 
-		private bool CanBeGathered( Collider2D collider )
+		protected virtual bool CanBeGathered( Collider2D collider )
 		{
 			if ( !m_contactFilter.useTriggers && collider.isTrigger ) { return false; }
 
