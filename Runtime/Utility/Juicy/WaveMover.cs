@@ -41,6 +41,10 @@ namespace Xam.Utility.Juicy
 		[SerializeField] private float m_rotateSpeed = 1;
 		[SerializeField] private float m_rotateDamping = 0.6f;
 
+		[Space]
+		[SerializeField] private Vector3 m_positionAxis = new Vector3( 1, 0, 1 );
+		[SerializeField] private Vector3 m_rotationAxis = Vector3.forward;
+
 		[Header( "References" )]
 		[SerializeField] private Transform m_target = default;
 
@@ -78,7 +82,12 @@ namespace Xam.Utility.Juicy
 				float sin = m_sinData.Calculate();//( Mathf.Sin );
 				float cos = m_cosData.Calculate();//( Mathf.Cos );
 
-				Vector3 wave = new Vector3( cos, 0, sin );
+				Vector3 wave = new Vector3()//new Vector3( cos, 0, sin );
+				{
+					x = m_positionAxis.x * cos,
+					y = m_positionAxis.y * sin,
+					z = m_positionAxis.z * sin
+				};
 				m_target.localPosition = m_initialPosition + wave;
 
 				//Debug.Log( $"WaveMover::Update::Sin [{sin}]  |  Cos [{cos}]" );
@@ -95,7 +104,7 @@ namespace Xam.Utility.Juicy
 
 				//Debug.Log( $"WaveMover::Update::Angle [{newAngle}]  |  Timer [{m_rotateTimer}]" );
 
-				transform.localEulerAngles = Vector3.forward * newAngle;
+				transform.localEulerAngles = m_rotationAxis * newAngle;//Vector3.forward * newAngle;
 			}
 
 
