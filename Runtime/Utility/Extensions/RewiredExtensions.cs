@@ -1,8 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+/* 
+ * Enable me at: [ Project Settings > Player > Scripting Define Symbols ]
+ * ( Don't forget semi-colons between defines! )
+ */
+#if REWIRED
 using Rewired;
-using System.Linq;
 
 namespace Xam.Utility.Extensions
 {
@@ -67,3 +72,4 @@ namespace Xam.Utility.Extensions
 		}
 	}
 }
+#endif
