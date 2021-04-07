@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+#if UNITY_POST_PROCESSING_STACK_V2
 using UnityEngine.Rendering.PostProcessing;
 
 namespace Xam.PostProcessing
@@ -31,3 +33,4 @@ namespace Xam.PostProcessing
 		}
 	}
 }
+#endif
