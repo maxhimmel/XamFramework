@@ -12,7 +12,9 @@ namespace Xam.Editor
 	public class WeightedListDrawer : PropertyDrawer
 	{
 		public const string k_itemsPropertyName = "m_items";
-		
+		public const string k_allowEmptyRollsName = "m_allowEmptyRolls";
+
+
 		private Dictionary<string, ReorderablePropertyData> m_propertyPathToReorderableProperties = null;
 
 		public WeightedListDrawer()
@@ -24,6 +26,7 @@ namespace Xam.Editor
 		{
 			ReorderablePropertyData reorderableProperty = GetReorderablePropertyData( property );
 
+			position = OnGUI_AllowEmptyRolls( position, property );
 			OnGUI_ItemsList( position, property.displayName, reorderableProperty );
 
 			if ( property.serializedObject.hasModifiedProperties )
@@ -32,6 +35,19 @@ namespace Xam.Editor
 
 				property.serializedObject.ApplyModifiedProperties();
 			}
+		}
+
+		private Rect OnGUI_AllowEmptyRolls( Rect position, SerializedProperty property )
+		{
+			float prevPosHeight = position.height;
+			position.height = EditorGUIUtility.singleLineHeight;
+
+			SerializedProperty allowEmptyRolls = property.FindPropertyRelative( k_allowEmptyRollsName );
+			EditorGUI.PropertyField( position, allowEmptyRolls );
+
+			position.height = prevPosHeight;
+			position.y += EditorGUIUtility.singleLineHeight;
+			return position;
 		}
 
 		private void OnGUI_ItemsList( Rect position, string headerName, ReorderablePropertyData reorderableProperty )
@@ -105,7 +121,7 @@ namespace Xam.Editor
 		public override float GetPropertyHeight( SerializedProperty property, GUIContent label )
 		{
 			ReorderablePropertyData reorderableProperty = GetReorderablePropertyData( property );
-			return reorderableProperty.Reorderable.GetHeight();
+			return EditorGUIUtility.singleLineHeight + reorderableProperty.Reorderable.GetHeight();
 		}
 	}
 

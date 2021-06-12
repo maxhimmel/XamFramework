@@ -15,6 +15,8 @@ namespace Xam.Utility.Randomization
 	public class WeightedList<T, K> : WeightedList
 		where T : WeightedNode<K>
 	{
+		[Tooltip( "If a '0' is rolled this will return nothing." )]
+		[SerializeField] private bool m_allowEmptyRolls = true;
 		[SerializeField] private T[] m_items = default;
 
 		private int m_maxWeight = 0;
@@ -42,7 +44,7 @@ namespace Xam.Utility.Randomization
 			}
 
 			int roll = Random.Range( 0, m_maxWeight + 1 );
-			if ( roll <= 0 ) { return default; }
+			if ( m_allowEmptyRolls && roll <= 0 ) { return default; }
 
 			foreach ( T node in m_items )
 			{
