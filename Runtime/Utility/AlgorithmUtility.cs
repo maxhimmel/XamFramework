@@ -6,7 +6,7 @@ namespace Xam.Utility
 {
 	public static class AlgorithmUtility
 	{
-		public static void FisherYatesShuffle<T>( ref IList<T> array )
+		public static void FisherYatesShuffle<T>( IList<T> array )
 		{
 			for ( int idx = array.Count - 1; idx > 0; --idx )
 			{
