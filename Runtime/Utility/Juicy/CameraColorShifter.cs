@@ -10,17 +10,7 @@ namespace Xam.Utility.Juicy
 		[SerializeField] private bool m_useRandomColorAtStart = false;
 		[SerializeField] private float m_shiftDuration = 2;
 
-		[Header( "Colors" )]
-		[SerializeField, Range( 0, 1 )] private float m_hueMin = 0;
-		[SerializeField, Range( 0, 1 )] private float m_hueMax = 1;
-
-		[Space]
-		[SerializeField, Range( 0, 1 )] private float m_saturationMin = 0;
-		[SerializeField, Range( 0, 1 )] private float m_saturationMax = 1;
-
-		[Space]
-		[SerializeField, Range( 0, 1 )] private float m_valueMin = 0;
-		[SerializeField, Range( 0, 1 )] private float m_valueMax = 1;
+		[SerializeField] private ColorHsvDatum m_colorData = new ColorHsvDatum();
 
 		private Camera m_camera = null;
 		private Coroutine m_shiftingRoutine = null;
@@ -43,11 +33,7 @@ namespace Xam.Utility.Juicy
 
 		private Color GetRandomColor()
 		{
-			return Random.ColorHSV( 
-				m_hueMin, m_hueMax, 
-				m_saturationMin, m_saturationMax, 
-				m_valueMin, m_valueMax 
-			);
+			return m_colorData.GetRandom();
 		}
 
 		private void StartShiftingColors( Color startColor, Color nextColor, float duration )
