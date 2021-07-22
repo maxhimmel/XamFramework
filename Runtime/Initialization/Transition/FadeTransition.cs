@@ -7,9 +7,6 @@ namespace Xam.Initialization
 {
 	public class FadeTransition : MonoBehaviour, ITransition
 	{
-		[Header( "Fade Transition" )]
-		[SerializeField] private bool m_startBlackedOut = false;
-
 		private Image m_fadeElement = null;
 		private Coroutine m_fadeRoutine = null;
 
@@ -47,11 +44,6 @@ namespace Xam.Initialization
 		private void Awake()
 		{
 			m_fadeElement = GetComponentInChildren<Image>();
-
-			if ( m_startBlackedOut )
-			{
-				m_fadeElement.color = new Color( 0, 0, 0, 1 );
-			}
 		}
 
 		private IEnumerator CrossFade_Coroutine( float targetAlpha, float timespan )

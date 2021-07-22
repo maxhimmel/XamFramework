@@ -37,6 +37,12 @@ namespace Xam.Initialization
 
 		private IEnumerator Initialize_Coroutine()
 		{
+			if ( TransitionController.Instance.StartClosed )
+			{
+				yield return new WaitForFixedUpdate();
+				TransitionController.Instance.Close( 0 );
+			}
+
 			int frameDelay = m_initFrameDelay;
 			while ( --frameDelay >= 0 ) { yield return null; }
 
