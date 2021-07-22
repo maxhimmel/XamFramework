@@ -21,5 +21,17 @@ namespace Xam.Utility.Extensions
 		{
 			return (x % N + N) % N;
 		}
+
+		public static float SafeDivide( float numerator, float denominator, bool useNumeratorAsFallback = true, float fallback = 0 )
+		{
+			if ( denominator == 0 )
+			{
+				return useNumeratorAsFallback
+					? numerator
+					: fallback;
+			}
+
+			return numerator / denominator;
+		}
 	}
 }

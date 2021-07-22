@@ -34,6 +34,18 @@ namespace Xam.Utility.Extensions
 			};
 		}
 
+		public static Vector3 SafeDivide( this Vector3 numerator, float denominator, bool useNumeratorAsFallback = true, Vector3 fallback = default )
+		{
+			if ( denominator == 0 )
+			{
+				return useNumeratorAsFallback
+					? numerator
+					: fallback;
+			}
+
+			return numerator / denominator;
+		}
+
 		public static Vector2 VectorXY( this Vector3 self )
 		{
 			return new Vector2( self.x, self.y );
@@ -47,6 +59,13 @@ namespace Xam.Utility.Extensions
 		public static Vector2 VectorYZ( this Vector3 self )
 		{
 			return new Vector2( self.y, self.z );
+		}
+
+		public static bool Approximately( this Vector3 self, Vector3 other )
+		{
+			return Mathf.Approximately( self.x, other.x )
+				&& Mathf.Approximately( self.y, other.y )
+				&& Mathf.Approximately( self.z, other.z );
 		}
 	}
 }
