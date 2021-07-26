@@ -25,6 +25,25 @@ namespace Xam.Utility.Extensions
 				throw new System.NotImplementedException( "OverlapColliders only supports basic primitive types." );
 			}
 		}
+		public static int OverlapCollidersNonAlloc( this Collider collider, Collider[] results, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal )
+		{
+			if ( TryGetCollider( collider, out BoxCollider box ) )
+			{
+				return OverlapCollidersNonAlloc( box, results, layerMask, queryTriggerInteraction );
+			}
+			else if ( TryGetCollider( collider, out SphereCollider sphere ) )
+			{
+				return OverlapCollidersNonAlloc( sphere, results, layerMask, queryTriggerInteraction );
+			}
+			else if ( TryGetCollider( collider, out CapsuleCollider capsule ) )
+			{
+				return OverlapCollidersNonAlloc( capsule, results, layerMask, queryTriggerInteraction );
+			}
+			else
+			{
+				throw new System.NotImplementedException( "OverlapColliders only supports basic primitive types." );
+			}
+		}
 
 		private static bool TryGetCollider<T>( Collider collider, out T castedCollider ) where T : Collider
 		{
@@ -47,6 +66,17 @@ namespace Xam.Utility.Extensions
 			return Physics.OverlapBox( center, scaledHalfExtents, rotation, layerMask, queryTriggerInteraction );
 		}
 
+		public static int OverlapCollidersNonAlloc( this BoxCollider collider, Collider[] results, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal )
+		{
+			Vector3 center = collider.bounds.center;
+			Quaternion rotation = collider.transform.rotation;
+
+			Vector3 halfExtents = collider.size / 2f;
+			Vector3 scaledHalfExtents = VectorExtensions.Multiply( halfExtents, collider.transform.lossyScale );
+
+			return Physics.OverlapBoxNonAlloc( center, scaledHalfExtents, results, rotation, layerMask, queryTriggerInteraction );
+		}
+
 		public static Collider[] OverlapColliders( this SphereCollider collider, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal )
 		{
 			Vector3 center = collider.bounds.center;
@@ -56,6 +86,17 @@ namespace Xam.Utility.Extensions
 			float scaledRadius = radius * Mathf.Max( scale.x, scale.y, scale.z );
 
 			return Physics.OverlapSphere( center, scaledRadius, layerMask, queryTriggerInteraction );
+		}
+
+		public static int OverlapCollidersNonAlloc( this SphereCollider collider, Collider[] results, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal )
+		{
+			Vector3 center = collider.bounds.center;
+
+			float radius = collider.radius;
+			Vector3 scale = collider.transform.lossyScale;
+			float scaledRadius = radius * Mathf.Max( scale.x, scale.y, scale.z );
+
+			return Physics.OverlapSphereNonAlloc( center, scaledRadius, results, layerMask, queryTriggerInteraction );
 		}
 
 		public static Collider[] OverlapColliders( this CapsuleCollider collider, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal )
@@ -77,6 +118,27 @@ namespace Xam.Utility.Extensions
 			Vector3 endPos = center + axisDir * offset;
 
 			return Physics.OverlapCapsule( startPos, endPos, radius, layerMask, queryTriggerInteraction );
+		}
+
+		public static int OverlapCollidersNonAlloc( this CapsuleCollider collider, Collider[] results, int layerMask = -1, QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal )
+		{
+			Vector3 center = collider.bounds.center;
+			float radius = GetScaledRadius( collider );
+			float height = GetScaledHeight( collider );
+
+			if ( radius >= height / 2f )
+			{
+				return Physics.OverlapSphereNonAlloc( center, radius, results, layerMask, queryTriggerInteraction );
+			}
+
+			Vector3 localDir = GetDirection( collider.direction );
+			Vector3 axisDir = collider.transform.TransformDirection( localDir );
+			float offset = height / 2f - radius;
+
+			Vector3 startPos = center - axisDir * offset;
+			Vector3 endPos = center + axisDir * offset;
+
+			return Physics.OverlapCapsuleNonAlloc( startPos, endPos, radius, results, layerMask, queryTriggerInteraction );
 		}
 
 		private static float GetScaledRadius( CapsuleCollider capsule )
