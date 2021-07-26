@@ -4,35 +4,69 @@ using UnityEngine;
 
 namespace Xam.Gameplay
 {
+	using Xam.Utility.Extensions;
+
 	/// <summary>
 	/// Gathers colliders whose layer matches the <see cref="m_gatherMask"/>.
 	/// </summary>
-	public class ProximityBucket : MonoBehaviour
+	public class ProximityBucket<T> : MonoBehaviour
+		where T : Component
 	{
+		public IEnumerable<T> Targets { get { return m_targets; } }
 		public bool HasAvailableTargets { get { return m_targets.Count > 0; } }
+		public int Count { get { return m_targets.Count; } }
 
-		public event System.Action<ProximityBucket, Collider> OnTargetEnterEvent;
-		public event System.Action<ProximityBucket, Collider> OnTargetExitEvent;
+		public event System.EventHandler<T> OnTargetEnterEvent;
+		public event System.EventHandler<T> OnTargetExitEvent;
 
 		[SerializeField] private LayerMask m_gatherMask = -1;
+		[SerializeField] private QueryTriggerInteraction m_queryTriggerInteraction = QueryTriggerInteraction.UseGlobal;
 
-		private List<Collider> m_targets = new List<Collider>();
+		private List<T> m_targets = new List<T>();
+		private Collider m_collider = null;
+		private Collider[] m_forceCheckedColliders = new Collider[0];
+
+		public void ClearBucket()
+		{
+			m_targets.Clear();
+		}
+
+		public void CheckProximityNonAlloc( int allocationSize )
+		{
+			if ( m_forceCheckedColliders.Length < allocationSize )
+			{
+				m_forceCheckedColliders = new Collider[allocationSize];
+			}
+
+			int numOverlaps = m_collider.OverlapCollidersNonAlloc( m_forceCheckedColliders, m_gatherMask, m_queryTriggerInteraction );
+			for ( int idx = 0; idx < numOverlaps; ++idx )
+			{
+				Collider overlap = m_forceCheckedColliders[idx];
+				OnTriggerEnter( overlap );
+			}
+		}
 
 		private void OnTriggerEnter( Collider other )
 		{
-			if ( CanEnterBucket( other ) && !IsInsideBucket( other ) )
+			if ( CanEnterBucket( other ) )
 			{
-				AddTarget( other );
-				OnTargetEnterEvent?.Invoke( this, other );
+				T target = other.attachedRigidbody?.GetComponentInParent<T>();
+				if ( IsInsideBucket( target ) ) { return; }
+
+				AddTarget( target );
+				OnTargetEnterEvent?.Invoke( this, target );
 			}
 		}
 
 		private void OnTriggerExit( Collider other )
 		{
-			if ( CanEnterBucket( other ) && IsInsideBucket( other ) )
+			if ( CanEnterBucket( other ) )
 			{
-				RemoveTarget( other );
-				OnTargetExitEvent?.Invoke( this, other );
+				T target = other.attachedRigidbody?.GetComponentInParent<T>();
+				if ( !IsInsideBucket( target ) ) { return; }
+
+				RemoveTarget( target );
+				OnTargetExitEvent?.Invoke( this, target );
 			}
 		}
 
@@ -42,19 +76,24 @@ namespace Xam.Gameplay
 			return (otherLayer & m_gatherMask) != 0;
 		}
 
-		private bool IsInsideBucket( Collider other )
+		private bool IsInsideBucket( T other )
 		{
 			return m_targets.Contains( other );
 		}
 
-		private void AddTarget( Collider target )
+		private void AddTarget( T target )
 		{
 			m_targets.Add( target );
 		}
 
-		private void RemoveTarget( Collider target )
+		private void RemoveTarget( T target )
 		{
 			m_targets.Remove( target );
+		}
+
+		protected virtual void Awake()
+		{
+			m_collider = GetComponent<Collider>();
 		}
 	}
 }
