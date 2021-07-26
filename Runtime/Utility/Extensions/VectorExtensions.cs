@@ -46,6 +46,16 @@ namespace Xam.Utility.Extensions
 			return numerator / denominator;
 		}
 
+		public static Vector3 Multiply( Vector3 lhs, Vector3 rhs )
+		{
+			return new Vector3()
+			{
+				x = lhs.x * rhs.x,
+				y = lhs.y * rhs.y,
+				z = lhs.z * rhs.z
+			};
+		}
+
 		public static Vector2 VectorXY( this Vector3 self )
 		{
 			return new Vector2( self.x, self.y );
