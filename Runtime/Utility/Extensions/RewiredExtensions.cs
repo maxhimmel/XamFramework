@@ -69,7 +69,7 @@ namespace Xam.Utility.Extensions
 		#endregion
 
 		#region Map
-		public static void CreateMapActivationRules( this Player player )
+		public static void CreateMapActivationRules( this Player player, ControllerType controllerSetSelectorType )
 		{
 			ControllerMapEnabler.RuleSet enabledControlsRuleSet = new ControllerMapEnabler.RuleSet()
 			{
@@ -85,7 +85,8 @@ namespace Xam.Utility.Extensions
 				{
 					enable = map.enabled,
 					categoryId = map.categoryId,
-					controllerSetSelector = ControllerSetSelector.SelectAll()
+					layoutId = map.layoutId,
+					controllerSetSelector = ControllerSetSelector.SelectControllerType( controllerSetSelectorType )
 				} );
 			}
 
@@ -108,7 +109,7 @@ namespace Xam.Utility.Extensions
 			player.controllers.maps.mapEnabler.Apply();
 		}
 
-		public static void SetControlsActive( this Player player, int categoryId, bool isActive )
+		public static void SetControlsActive( this Player player, bool isActive, int categoryId, int layoutId = 0 )
 		{
 			ControllerMapEnabler.RuleSet enabledControlsRuleSet = player.controllers.maps.mapEnabler.ruleSets.Find( 
 				queryRuleSet => queryRuleSet.tag == k_enabledControlsRuleSetTag 
@@ -116,7 +117,7 @@ namespace Xam.Utility.Extensions
 			
 			foreach ( ControllerMapEnabler.Rule rule in enabledControlsRuleSet.rules )
 			{
-				if ( rule.categoryId == categoryId )
+				if ( rule.categoryId == categoryId && rule.layoutId == layoutId )
 				{
 					rule.enable = isActive;
 				}
