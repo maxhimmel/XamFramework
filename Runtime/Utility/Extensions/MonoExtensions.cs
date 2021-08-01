@@ -6,6 +6,18 @@ namespace Xam.Utility.Extensions
 {
 	public static class MonoExtenstions
 	{
+		public static Coroutine StartWaitingForSeconds<T>( this MonoBehaviour mono, float seconds, System.Action<T> callback, T arg )
+		{
+			return mono.StartCoroutine( WaitForSeconds_Coroutine( seconds, callback, arg ) );
+		}
+
+		public static IEnumerator WaitForSeconds_Coroutine<T>( float seconds, System.Action<T> callback, T arg )
+		{
+			if ( seconds > 0 ) { yield return new WaitForSeconds( seconds ); }
+
+			callback?.Invoke( arg );
+		}
+
 		public static Coroutine StartWaitingForSeconds( this MonoBehaviour mono, float seconds, System.Action callback )
 		{
 			return mono.StartCoroutine( WaitForSeconds_Coroutine( seconds, callback ) );
@@ -44,6 +56,18 @@ namespace Xam.Utility.Extensions
 			}
 
 			callback?.Invoke();
+		}
+
+		public static bool TryStopCoroutine( this MonoBehaviour mono, ref Coroutine routine )
+		{
+			if ( routine != null )
+			{
+				mono.StopCoroutine( routine );
+				routine = null;
+				return true;
+			}
+
+			return false;
 		}
 	}
 }
