@@ -8,12 +8,12 @@ namespace Xam.Gameplay
 	{
 		protected Vector3 BoundsCenter { get { return transform.position; } }
 
-		protected override Vector3 GetNextPosition( int placementIndex, int totalPlacements )
+		protected override Vector3 GetNextPosition( int placementIndex, int totalPlacements, Space space )
 		{
-			return GetRandomPositionWithinBounds();
+			return GetRandomPositionWithinBounds( space );
 		}
 
-		protected abstract Vector3 GetRandomPositionWithinBounds();
+		protected abstract Vector3 GetRandomPositionWithinBounds( Space space );
 
 		protected override Quaternion GetNextRotation( int placementIndex, int totalPlacements, Vector3 position )
 		{

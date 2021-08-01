@@ -6,6 +6,8 @@ namespace Xam.Gameplay
 {
 	public interface IPlacement
 	{
-		void GetNextOrientation( int placementIndex, int totalPlacements, out Vector3 position, out Quaternion rotation );
+		Vector3 Center { get; }
+
+		void GetNextOrientation( int placementIndex, int totalPlacements, out Vector3 position, out Quaternion rotation, Space space = Space.World );
 	}
 }

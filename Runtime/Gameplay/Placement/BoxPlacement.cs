@@ -13,13 +13,22 @@ namespace Xam.Gameplay
 		[SerializeField, Min( 0 )] private Vector2 m_minSize = Vector2.zero;
 		[SerializeField, Min( 0 )] private Vector2 m_maxSize = Vector2.one;
 
-		protected override Vector3 GetRandomPositionWithinBounds()
+		protected override Vector3 GetRandomPositionWithinBounds( Space space )
 		{
 			Vector3 randDir = Random.insideUnitCircle.normalized;
 			randDir *= m_minSize.magnitude;
 
 			Bounds b = new Bounds( Vector3.zero, m_minSize );
-			return b.ClosestPoint( randDir ) + BoundsCenter;
+			Vector3 result = b.ClosestPoint( randDir );
+
+			if ( space == Space.World )
+			{
+				return result + BoundsCenter;
+			}
+			else
+			{
+				return result;
+			}
 
 
 			//Vector3 randPos = RandomPointNearRect( transform.position.x, transform.position.y, m_maxSize.x, m_maxSize.y, 0, 1 );

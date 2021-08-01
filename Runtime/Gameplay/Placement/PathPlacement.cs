@@ -10,10 +10,19 @@ namespace Xam.Gameplay
 	{
 		private CinemachinePathBase m_path = null;
 
-		protected override Vector3 GetNextPosition( int placementIndex, int totalPlacements )
+		protected override Vector3 GetNextPosition( int placementIndex, int totalPlacements, Space space )
 		{
 			float pathPos = placementIndex / (float)totalPlacements;
-			return m_path.EvaluatePositionAtUnit( pathPos, CinemachinePathBase.PositionUnits.Normalized );
+			Vector3 worldPos = m_path.EvaluatePositionAtUnit( pathPos, CinemachinePathBase.PositionUnits.Normalized );
+
+			if ( space == Space.World )
+			{
+				return worldPos;
+			}
+			else
+			{
+				return m_path.transform.InverseTransformPoint( worldPos );
+			}
 		}
 
 		protected override Quaternion GetNextRotation( int placementIndex, int totalPlacements, Vector3 position )

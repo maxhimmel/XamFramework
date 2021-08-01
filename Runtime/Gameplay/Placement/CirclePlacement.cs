@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace Xam.Gameplay
 {
+	using Utility.Extensions;
+
 	public class CirclePlacement : BoundsPlacement
 	{
 		private float MaxRadiusScale { get { return Mathf.Max( transform.lossyScale.x, transform.lossyScale.y, transform.lossyScale.z ); } }
@@ -11,12 +13,14 @@ namespace Xam.Gameplay
 		[SerializeField, Min( 0 )] private float m_minRadius = 0;
 		[SerializeField, Min( 0 )] private float m_maxRadius = 0.5f;
 
-		protected override Vector3 GetRandomPositionWithinBounds()
+		protected override Vector3 GetRandomPositionWithinBounds( Space space )
 		{
 			Vector3 minScale = transform.lossyScale * m_minRadius;
 			Vector3 maxScale = transform.lossyScale * m_maxRadius;
 
-			Vector3 randNormalizedDir = Random.insideUnitCircle.normalized;
+			Vector3 randNormalizedDir = Random.onUnitSphere;
+			randNormalizedDir = VectorExtensions.Multiply( randNormalizedDir, minScale ).normalized;
+
 			Vector3 randNormalizedValues = new Vector3( Random.value, Random.value, Random.value );
 
 			Vector3 randOffsetDir = new Vector3()
@@ -26,7 +30,14 @@ namespace Xam.Gameplay
 				z = randNormalizedDir.z * Mathf.Lerp( minScale.z, maxScale.z, randNormalizedValues.z ),
 			};
 
-			return randOffsetDir + BoundsCenter;
+			if ( space == Space.World )
+			{
+				return randOffsetDir + BoundsCenter;
+			}
+			else
+			{
+				return randOffsetDir;
+			}
 		}
 
 
