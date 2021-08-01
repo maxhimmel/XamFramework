@@ -24,7 +24,7 @@ namespace Xam.Gameplay
 
 		private List<T> m_targets = new List<T>();
 		private Collider m_collider = null;
-		private Collider[] m_forceCheckedColliders = new Collider[0];
+		private static Collider[] m_forceCheckedColliders = new Collider[0];
 
 		public void ClearBucket()
 		{
