@@ -83,7 +83,7 @@ namespace Xam.Gameplay
 		[Header( "Tools / Editor" )]
 		[SerializeField] private Color m_boxColor = new Color( 0.1f, 1, 0, 0.45f );
 
-		private void OnDrawGizmos()
+		private void OnDrawGizmosSelected()
 		{
 			Gizmos.color = m_boxColor;
 
