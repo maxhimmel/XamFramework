@@ -28,7 +28,8 @@ namespace Xam.Gameplay
 
 		protected virtual void OnValidate()
 		{
-
+			ILookRotation lookRotation = GetComponentInChildren<ILookRotation>();
+			Debug.Assert( lookRotation != null, "Please attach either a 2D or 3D LookRotation to this object.", this );
 		}
 	}
 }
