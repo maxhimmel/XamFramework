@@ -22,8 +22,12 @@ namespace Xam.Gameplay
 		[SerializeField] private LayerMask m_gatherMask = -1;
 		[SerializeField] private QueryTriggerInteraction m_queryTriggerInteraction = QueryTriggerInteraction.UseGlobal;
 
+		[Header( "Trigger Relays" )]
+		[SerializeField] private TriggerEnterRelay m_enterRelay = default;
+		[SerializeField] private TriggerExitRelay m_exitRelay = default;
+
 		private List<T> m_targets = new List<T>();
-		private Collider m_collider = null;
+		//private Collider m_collider = null;
 		private static Collider[] m_forceCheckedColliders = new Collider[0];
 
 		public void ClearBucket()
@@ -38,15 +42,15 @@ namespace Xam.Gameplay
 				m_forceCheckedColliders = new Collider[allocationSize];
 			}
 
-			int numOverlaps = m_collider.OverlapCollidersNonAlloc( m_forceCheckedColliders, m_gatherMask, m_queryTriggerInteraction );
+			int numOverlaps = m_enterRelay.Collider.OverlapCollidersNonAlloc( m_forceCheckedColliders, m_gatherMask, m_queryTriggerInteraction );
 			for ( int idx = 0; idx < numOverlaps; ++idx )
 			{
 				Collider overlap = m_forceCheckedColliders[idx];
-				OnTriggerEnter( overlap );
+				OnTriggerEntered( m_enterRelay, overlap );
 			}
 		}
 
-		private void OnTriggerEnter( Collider other )
+		private void OnTriggerEntered( object sender, Collider other )
 		{
 			if ( CanEnterBucket( other ) )
 			{
@@ -58,7 +62,7 @@ namespace Xam.Gameplay
 			}
 		}
 
-		private void OnTriggerExit( Collider other )
+		private void OnTriggerExited( object sender, Collider other )
 		{
 			if ( CanEnterBucket( other ) )
 			{
@@ -93,7 +97,8 @@ namespace Xam.Gameplay
 
 		protected virtual void Awake()
 		{
-			m_collider = GetComponent<Collider>();
+			m_enterRelay.OnTriggerEnterHandler += OnTriggerEntered;
+			m_exitRelay.OnTriggerExitHandler += OnTriggerExited;
 		}
 	}
 }
