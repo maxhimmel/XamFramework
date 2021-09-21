@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+#if DO_TWEEN
 using DG.Tweening;
 
 namespace Xam.Gameplay.Vfx
@@ -40,3 +42,4 @@ namespace Xam.Gameplay.Vfx
 		}
 	}
 }
+#endif
