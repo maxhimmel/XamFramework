@@ -27,7 +27,6 @@ namespace Xam.Gameplay
 		[SerializeField] private TriggerExitRelay m_exitRelay = default;
 
 		private List<T> m_targets = new List<T>();
-		//private Collider m_collider = null;
 		private static Collider[] m_forceCheckedColliders = new Collider[0];
 
 		public void ClearBucket()
