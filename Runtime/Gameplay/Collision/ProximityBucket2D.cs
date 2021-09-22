@@ -11,8 +11,8 @@ namespace Xam.Gameplay
 		public bool HasAvailableTargets { get { return Count > 0; } }
 		public int Count { get { return m_targets.Count; } }
 
-		public event System.Action<T> OnTargetEnterEvent;
-		public event System.Action<T> OnTargetExitEvent;
+		public event System.EventHandler<T> TargetEntered;
+		public event System.EventHandler<T> TargetExited;
 
 		[SerializeField] private LayerMask m_gatherMask = -1;
 		[SerializeField] private ContactFilter2D m_contactFilter = default;
@@ -50,7 +50,7 @@ namespace Xam.Gameplay
 
 		protected virtual void OnTargetEntered( T target )
 		{
-			OnTargetEnterEvent?.Invoke( target );
+			TargetEntered?.Invoke( this, target );
 		}
 
 		private void OnTriggerExit2D( Collider2D other )
@@ -67,7 +67,7 @@ namespace Xam.Gameplay
 
 		protected virtual void OnTargetExited( T target )
 		{
-			OnTargetExitEvent?.Invoke( target );
+			TargetExited?.Invoke( this, target );
 		}
 
 		protected virtual bool CanBeGathered( Collider2D collider )
