@@ -17,6 +17,11 @@ namespace Xam.Gameplay.Vfx
 		private Renderer m_renderer;
 		private Tweener m_fadeTweener;
 
+		public void SetDuration( float duration )
+		{
+			m_fadeDuration = duration;
+		}
+
 		protected override bool IsAlive()
 		{
 			return m_fadeTweener.IsActive();
