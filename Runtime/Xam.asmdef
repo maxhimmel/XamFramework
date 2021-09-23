@@ -1,9 +1,11 @@
 {
     "name": "Xam",
+    "rootNamespace": "",
     "references": [
         "GUID:4307f53044263cf4b835bd812fc161a4",
         "GUID:d60799ab2a985554ea1a39cd38695018",
-        "GUID:46f554ec6fef5a64585289b98cefe93e"
+        "GUID:5150f59ef12b5f44bba7465776fc2502",
+        "GUID:fe03ae1bd53ce8a4486ff5872151fe86"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -11,7 +13,9 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "DO_TWEEN"
+    ],
     "versionDefines": [],
     "noEngineReferences": false
 }
