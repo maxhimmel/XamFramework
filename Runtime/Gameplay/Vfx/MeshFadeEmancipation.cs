@@ -41,6 +41,11 @@ namespace Xam.Gameplay.Vfx
 			m_renderer.material.color = color;
 		}
 
+		private void OnDestroy()
+		{
+			m_fadeTweener.Kill();
+		}
+
 		private void Awake()
 		{
 			m_renderer = GetComponentInChildren<Renderer>();
