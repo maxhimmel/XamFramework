@@ -6,7 +6,7 @@ namespace Xam.Utility
 {
 	public class CosWaveEvaluator : MonoBehaviour, IWaveEvaluator
 	{
-		public float Evaluate( WaveDatum data, float time )
+		float IWaveEvaluator.Evaluate( WaveDatum data, float time )
 		{
 			return data.Amplitude * Mathf.Cos( time * data.Frequency + data.Phase );
 		}
