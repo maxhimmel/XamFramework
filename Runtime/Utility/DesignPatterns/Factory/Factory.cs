@@ -7,6 +7,8 @@ namespace Xam.Gameplay.Patterns
 	public abstract class Factory<T> : MonoBehaviour 
 		where T : Object
 	{
+		public System.EventHandler<T> Created;
+
 		[Header( "References" )]
 		[SerializeField] protected T m_prefab = default;
 
@@ -17,6 +19,9 @@ namespace Xam.Gameplay.Patterns
 		public virtual T Create( Vector3 position = default, Quaternion rotation = default, Transform parent = null )
 		{
 			T newObj = Instantiate( m_prefab, position, rotation, parent );
+
+			Created?.Invoke( this, newObj );
+
 			return newObj;
 		}
 
