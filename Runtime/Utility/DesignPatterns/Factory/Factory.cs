@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace Xam.Gameplay.Patterns
 {
-	public abstract class Factory<T> : MonoBehaviour 
+	public abstract class Factory<T> : MonoBehaviour, IFactory<T>
 		where T : Object
 	{
-		public System.EventHandler<T> Created;
+		public event System.EventHandler<T> Created;
 
 		[Header( "References" )]
 		[SerializeField] protected T m_prefab = default;
