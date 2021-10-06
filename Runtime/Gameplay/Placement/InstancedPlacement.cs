@@ -18,8 +18,8 @@ namespace Xam.Gameplay
 			rotation = GetNextRotation( placementIndex, totalPlacements, position );
 		}
 
-		protected abstract Vector3 GetNextPosition( int placementIndex, int totalPlacements, Space space );
-		protected abstract Quaternion GetNextRotation( int placementIndex, int totalPlacements, Vector3 position );
+		public abstract Vector3 GetNextPosition( int placementIndex, int totalPlacements, Space space );
+		public abstract Quaternion GetNextRotation( int placementIndex, int totalPlacements, Vector3 position );
 
 		protected virtual void Awake()
 		{
