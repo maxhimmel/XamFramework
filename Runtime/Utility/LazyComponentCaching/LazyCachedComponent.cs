@@ -13,6 +13,10 @@ namespace Xam.Utility
 			{
 				return this[root.gameObject];
 			}
+			set
+			{
+				this[root.gameObject] = value;
+			}
 		}
 
 		public T this[GameObject root] 
@@ -23,6 +27,10 @@ namespace Xam.Utility
 
 				m_cachedComponent = GetComponent( root );
 				return m_cachedComponent;
+			}
+			set
+			{
+				m_cachedComponent = value;
 			}
 		}
 
