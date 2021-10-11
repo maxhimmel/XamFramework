@@ -80,6 +80,8 @@ namespace Xam.Gameplay
 
 		private bool IsInsideBucket( T other )
 		{
+			if ( other == null ) { return false; }
+
 			return m_targets.Contains( other );
 		}
 
