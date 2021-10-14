@@ -7,7 +7,8 @@ namespace Xam.Gameplay
 {
 	public class WeightedInstancePlacement : InstancedPlacement
 	{
-		[Tooltip( "If true, separate placements can be used to determine positions and rotations for the same object." )]
+		[Tooltip( "If true, separate placements can be used to determine positions and rotations for the same object. \n" +
+			"Ex) Placements[0] could return your position and Placements[2] could return your rotation." )]
 		[SerializeField] private bool m_canMismatchOrientations = false;
 		[SerializeField] private WeightedInstancePlacementList m_placements = new WeightedInstancePlacementList();
 
