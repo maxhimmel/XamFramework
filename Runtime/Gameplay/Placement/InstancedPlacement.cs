@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+#if ODIN_INSPECTOR
+using Sirenix.OdinInspector;
+#endif
+
 namespace Xam.Gameplay
 {
 	using Xam.Utility;
@@ -12,7 +16,7 @@ namespace Xam.Gameplay
 
 		protected ILookRotation m_lookRotation = null;
 
-		void IPlacement.GetNextOrientation( int placementIndex, int totalPlacements, out Vector3 position, out Quaternion rotation, Space space )
+		public void GetNextOrientation( int placementIndex, int totalPlacements, out Vector3 position, out Quaternion rotation, Space space = Space.World )
 		{
 			position = GetNextPosition( placementIndex, totalPlacements, space );
 			rotation = GetNextRotation( placementIndex, totalPlacements, position );
@@ -31,5 +35,26 @@ namespace Xam.Gameplay
 			ILookRotation lookRotation = GetComponentInChildren<ILookRotation>();
 			Debug.Assert( lookRotation != null, "Please attach either a 2D or 3D LookRotation to this object.", this );
 		}
+
+#if ODIN_INSPECTOR && UNITY_EDITOR
+		[ButtonGroup( VisibleIf = "IsLookRotationMissing" )]
+		[Button( "Add 2D Look Rotation", DirtyOnClick = false )]
+		private void Add2DLookRotation()
+		{
+			UnityEditor.Undo.AddComponent<LookRotation2d>( gameObject );
+		}
+
+		[ButtonGroup( VisibleIf = "IsLookRotationMissing" )]
+		[Button( "Add 3D Look Rotation", DirtyOnClick = false )]
+		private void Add3DLookRotation()
+		{
+			UnityEditor.Undo.AddComponent<LookRotation3d>( gameObject );
+		}
+
+		private bool IsLookRotationMissing()
+		{
+			return GetComponentInChildren<ILookRotation>() == null;
+		}
+#endif
 	}
 }
