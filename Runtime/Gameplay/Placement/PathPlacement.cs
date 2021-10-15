@@ -12,7 +12,7 @@ namespace Xam.Gameplay
 
 		public override Vector3 GetNextPosition( int placementIndex, int totalPlacements, Space space )
 		{
-			float pathPos = placementIndex / (float)totalPlacements;
+			float pathPos = placementIndex / (float)(totalPlacements - 1);
 			Vector3 worldPos = m_path.EvaluatePositionAtUnit( pathPos, CinemachinePathBase.PositionUnits.Normalized );
 
 			if ( space == Space.World )
