@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Xam.Utility.Juicy
 {
-	public class CameraColorShifter : MonoBehaviour
+	public class ColorShifter : MonoBehaviour
 	{
 		[SerializeField] private bool m_playOnStart = true;
 		[SerializeField] private bool m_useRandomColorAtStart = false;
@@ -12,7 +12,7 @@ namespace Xam.Utility.Juicy
 
 		[SerializeField] private ColorHsvDatum m_colorData = new ColorHsvDatum();
 
-		private Camera m_camera = null;
+		private IColorModifier m_colorModifier = null;
 		private Coroutine m_shiftingRoutine = null;
 
 		private void Start()
@@ -21,14 +21,9 @@ namespace Xam.Utility.Juicy
 			{
 				Color startColor = m_useRandomColorAtStart
 					? GetRandomColor()
-					: GetCurrentColor();
+					: m_colorModifier.GetCurrentColor();
 				StartShiftingColors( startColor, GetRandomColor(), m_shiftDuration );
 			}
-		}
-
-		private Color GetCurrentColor()
-		{
-			return m_camera.backgroundColor;
 		}
 
 		private Color GetRandomColor()
@@ -60,24 +55,19 @@ namespace Xam.Utility.Juicy
 				timer += Time.deltaTime / duration;
 
 				Color newColor = Color.Lerp( startColor, nextColor, timer );
-				SetCameraColor( newColor );
+				m_colorModifier.SetCurrentColor( newColor );
 
 				yield return null;
 			}
 
-			SetCameraColor( nextColor );
+			m_colorModifier.SetCurrentColor( nextColor );
 
 			StartShiftingColors( nextColor, GetRandomColor(), m_shiftDuration );
 		}
 
-		private void SetCameraColor( Color color )
-		{
-			m_camera.backgroundColor = color;
-		}
-
 		private void Awake()
 		{
-			m_camera = GetComponent<Camera>();
+			m_colorModifier = GetComponent<IColorModifier>();
 		}
 	}
 }
