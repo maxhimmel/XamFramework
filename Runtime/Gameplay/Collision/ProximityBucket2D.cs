@@ -14,6 +14,7 @@ namespace Xam.Gameplay
 		public event System.EventHandler<T> TargetEntered;
 		public event System.EventHandler<T> TargetExited;
 
+		[SerializeField] private bool m_ignoreSelf = true;
 		[SerializeField] private LayerMask m_gatherMask = -1;
 		[SerializeField] private ContactFilter2D m_contactFilter = default;
 
@@ -72,6 +73,8 @@ namespace Xam.Gameplay
 
 		protected virtual bool CanBeGathered( Collider2D collider )
 		{
+			if ( m_ignoreSelf && m_collider == collider ) { return false; }
+
 			if ( !m_contactFilter.useTriggers && collider.isTrigger ) { return false; }
 
 			int otherLayer = 1 << collider.gameObject.layer;
