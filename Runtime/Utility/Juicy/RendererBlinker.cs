@@ -14,6 +14,11 @@ namespace Xam.Utility.Juicy
 		private Renderer m_renderer;
 		private Coroutine m_blinkRoutine;
 
+		public void SetFrequency( float frequency )
+		{
+			m_blinkFrequency = frequency;
+		}
+
 		public void Play()
 		{
 			this.TryStopCoroutine( ref m_blinkRoutine );
