@@ -42,17 +42,29 @@ namespace Xam.Utility.Extensions
 
 		private static string m_classNameColor;
 
+		public static void Log( this object self, string message, Colors color = k_defaultLogColor )
+		{
+			StringBuilder sb = BuildLog( self, message, color );
+			Debug.Log( sb );
+		}
+
 		public static void Log( this MonoBehaviour self, string message, Colors color = k_defaultLogColor )
 		{
+			StringBuilder sb = BuildLog( self, message, color );
+			Debug.Log( sb, self );
+		}
+
+		private static StringBuilder BuildLog( object obj, string message, Colors color = k_defaultLogColor )
+		{
 			TryInitRefs();
-			ConfigLoggingData( self, message, color, out int capacity, out string messageColor );
+			ConfigLoggingData( obj, message, color, out int capacity, out string messageColor, out string senderName );
 
 			StringBuilder sb = new StringBuilder( capacity );
 			using ( new RtfBold( sb ) )
 			{
 				using ( new RtfColor( sb, m_classNameColor ) )
 				{
-					sb.AppendFormat( "[{0}] ", self.name );
+					sb.AppendFormat( "[{0}] ", senderName );
 				}
 			}
 
@@ -68,7 +80,7 @@ namespace Xam.Utility.Extensions
 				}
 			}
 
-			Debug.Log( sb, self );
+			return sb;
 		}
 
 		private static void TryInitRefs()
@@ -79,13 +91,14 @@ namespace Xam.Utility.Extensions
 			}
 		}
 
-		private static void ConfigLoggingData( MonoBehaviour sender, string message, Colors color, out int messageCapacity, out string messageColor )
+		private static void ConfigLoggingData( object sender, string message, Colors color, out int messageCapacity, out string messageColor, out string senderName )
 		{
 			messageColor = (color != k_defaultLogColor) ? ToColor( color ) : string.Empty;
+			senderName = (sender != null) ? sender.ToString() : string.Empty;
 
 			int messageLength = string.IsNullOrEmpty( message ) ? 0 : message.Length;
 			messageCapacity = messageLength;
-			messageCapacity += sender.name.Length; // We always include the gameobject's name
+			messageCapacity += senderName.Length; // We always include the gameobject's name
 			messageCapacity += k_emboldenCharCount; // We always embolden the class name
 			messageCapacity += k_coloredCharCount + m_classNameColor.Length; // We always color the class name
 			messageCapacity += k_classStylingCount; // We always add a space after the class name and wrap the class name with brackets []
