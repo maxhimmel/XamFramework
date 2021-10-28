@@ -48,7 +48,7 @@ namespace Xam.Utility.Extensions
 			Debug.Log( sb );
 		}
 
-		public static void Log( this MonoBehaviour self, string message, Colors color = k_defaultLogColor )
+		public static void Log( this Object self, string message, Colors color = k_defaultLogColor )
 		{
 			StringBuilder sb = BuildLog( self, message, color );
 			Debug.Log( sb, self );
@@ -94,7 +94,15 @@ namespace Xam.Utility.Extensions
 		private static void ConfigLoggingData( object sender, string message, Colors color, out int messageCapacity, out string messageColor, out string senderName )
 		{
 			messageColor = (color != k_defaultLogColor) ? ToColor( color ) : string.Empty;
-			senderName = (sender != null) ? sender.ToString() : string.Empty;
+
+			senderName = string.Empty;
+			if ( sender != null )
+			{
+				senderName = sender.GetType().Name;
+				//senderName = (sender is Object)
+				//	? ((Object)sender).name
+				//	: sender.ToString();
+			}
 
 			int messageLength = string.IsNullOrEmpty( message ) ? 0 : message.Length;
 			messageCapacity = messageLength;
