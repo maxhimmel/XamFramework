@@ -7,6 +7,8 @@ namespace Xam.Utility
     [CreateAssetMenu( fileName = "NewColorPalette", menuName = "Xam/Color Palette", order = 0 )]
     public class ColorPalette : ScriptableObject
     {
+        public int Count => m_gradients.Length;
+
         [SerializeField] private Gradient[] m_gradients = new Gradient[0];
 
         /// <summary>
