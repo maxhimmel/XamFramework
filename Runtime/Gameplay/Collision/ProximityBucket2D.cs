@@ -7,7 +7,7 @@ namespace Xam.Gameplay
 	public class ProximityBucket2D<T> : MonoBehaviour
 		where T : Component
 	{
-		public IEnumerable<T> Targets { get { return m_targets; } }
+		public IReadOnlyList<T> Targets { get { return m_targets; } }
 		public bool HasAvailableTargets { get { return Count > 0; } }
 		public int Count { get { return m_targets.Count; } }
 
