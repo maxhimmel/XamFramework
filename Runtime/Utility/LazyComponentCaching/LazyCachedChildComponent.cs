@@ -9,7 +9,7 @@ namespace Xam.Utility
 	{
 		private readonly bool k_includeInactiveChildren;
 
-		public LazyCachedChildComponent(bool includeInactiveChildren)
+		public LazyCachedChildComponent(bool includeInactiveChildren )
 		{
 			k_includeInactiveChildren = includeInactiveChildren;
 		}
