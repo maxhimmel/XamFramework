@@ -6,24 +6,23 @@ namespace Xam.Utility.Juicy
 {
 	public class ColorShifter : MonoBehaviour
 	{
-		[SerializeField] private bool m_playOnStart = true;
 		[SerializeField] private bool m_useRandomColorAtStart = false;
 		[SerializeField] private float m_shiftDuration = 2;
 
 		[SerializeField] private ColorHsvDatum m_colorData = new ColorHsvDatum();
 
 		private IColorModifier m_colorModifier = null;
-		private Coroutine m_shiftingRoutine = null;
+		private float m_timer = 0;
+		private Color m_startColor;
+		private Color m_nextColor;
 
 		private void Start()
 		{
-			if ( m_playOnStart )
-			{
-				Color startColor = m_useRandomColorAtStart
-					? GetRandomColor()
-					: m_colorModifier.GetCurrentColor();
-				StartShiftingColors( startColor, GetRandomColor(), m_shiftDuration );
-			}
+			m_startColor = m_useRandomColorAtStart
+				? GetRandomColor()
+				: m_colorModifier.GetCurrentColor();
+
+			m_nextColor = GetRandomColor();
 		}
 
 		private Color GetRandomColor()
@@ -31,38 +30,19 @@ namespace Xam.Utility.Juicy
 			return m_colorData.GetRandom();
 		}
 
-		private void StartShiftingColors( Color startColor, Color nextColor, float duration )
+		private void Update()
 		{
-			StopShiftingColors();
+			m_timer += Time.deltaTime / m_shiftDuration;
 
-			m_shiftingRoutine = StartCoroutine( ShiftColors_Coroutine( startColor, nextColor, duration ) );
-		}
+			Color newColor = Color.Lerp( m_startColor, m_nextColor, m_timer );
+			m_colorModifier.SetCurrentColor( newColor );
 
-		private void StopShiftingColors()
-		{
-			if ( m_shiftingRoutine != null )
+			if ( m_timer >= 1 )
 			{
-				StopCoroutine( m_shiftingRoutine );
-				m_shiftingRoutine = null;
+				m_timer = 0;
+				m_startColor = m_nextColor;
+				m_nextColor = GetRandomColor();
 			}
-		}
-
-		private IEnumerator ShiftColors_Coroutine( Color startColor, Color nextColor, float duration )
-		{
-			float timer = 0;
-			while ( timer < 1 )
-			{
-				timer += Time.deltaTime / duration;
-
-				Color newColor = Color.Lerp( startColor, nextColor, timer );
-				m_colorModifier.SetCurrentColor( newColor );
-
-				yield return null;
-			}
-
-			m_colorModifier.SetCurrentColor( nextColor );
-
-			StartShiftingColors( nextColor, GetRandomColor(), m_shiftDuration );
 		}
 
 		private void Awake()
