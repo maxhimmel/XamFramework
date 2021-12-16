@@ -8,6 +8,7 @@ namespace Xam.Utility.Juicy
 	public class RendererColorModifier : MonoBehaviour, IColorModifier
 	{
 		private Renderer m_renderer;
+		private MaterialPropertyBlock m_propertyBlock;
 
 		public Color GetCurrentColor()
 		{
@@ -16,12 +17,14 @@ namespace Xam.Utility.Juicy
 
 		public void SetCurrentColor( Color color )
 		{
-			m_renderer.material.color = color;
+			m_propertyBlock.SetColor( "_Color", color );
+			m_renderer.SetPropertyBlock( m_propertyBlock );
 		}
 
 		private void Awake()
 		{
 			m_renderer = GetComponent<Renderer>();
+			m_propertyBlock = new MaterialPropertyBlock();
 		}
 	}
 }
