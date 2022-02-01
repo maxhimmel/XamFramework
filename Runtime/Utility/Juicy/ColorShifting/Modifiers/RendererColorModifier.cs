@@ -7,6 +7,8 @@ namespace Xam.Utility.Juicy
 	[RequireComponent( typeof( Renderer ) )]
 	public class RendererColorModifier : MonoBehaviour, IColorModifier
 	{
+		[SerializeField] private string m_colorPropertyName = "_Color";
+
 		private Renderer m_renderer;
 		private MaterialPropertyBlock m_propertyBlock;
 
@@ -17,7 +19,7 @@ namespace Xam.Utility.Juicy
 
 		public void SetCurrentColor( Color color )
 		{
-			m_propertyBlock.SetColor( "_Color", color );
+			m_propertyBlock.SetColor( m_colorPropertyName, color );
 			m_renderer.SetPropertyBlock( m_propertyBlock );
 		}
 
